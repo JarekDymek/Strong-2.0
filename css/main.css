@@ -711,9 +711,8 @@ body.dark .result-dist .resultInput { background:rgba(251,191,36,0.12) !importan
 #focusPrevBtn, #focusNextBtn { background:linear-gradient(135deg,#1D4ED8,#2563EB); }
 .focus-close-btn { position:absolute; top:14px; right:18px; background:none; border:none; font-size:2.4rem; color:rgba(255,255,255,0.55); cursor:pointer; padding:0; width:auto; margin:0; box-shadow:none; transition:color var(--t-fast); }
 .focus-close-btn:hover { color:var(--fire-btn); }
-.focus-back-btn { display:block; width:100%; margin-top:14px; padding:16px; font-size:1.05rem; font-weight:700; background:linear-gradient(135deg,#374151,#4B5563); color:#fff; border:none; border-radius:var(--r-md); cursor:pointer; letter-spacing:0.5px; transition:background 0.2s,transform 0.1s; box-shadow:0 2px 8px rgba(0,0,0,0.35); }
-.focus-back-btn:hover { background:linear-gradient(135deg,#4B5563,#6B7280); }
-.focus-back-btn:active { transform:scale(0.98); }
+.focus-back-btn { display:block; margin:0 auto 18px auto; padding:12px 28px; font-size:1rem; font-family:var(--font-display); letter-spacing:1px; font-weight:700; background:linear-gradient(135deg,#374151,#4B5563); color:#fff; border:none; border-radius:var(--r-md); cursor:pointer; width:100%; max-width:320px; text-align:center; transition:background var(--t-fast), transform var(--t-fast); box-shadow:0 2px 8px rgba(0,0,0,0.3); }
+.focus-back-btn:hover { background:linear-gradient(135deg,#4B5563,#6B7280); transform:translateY(-1px); }
 
 /* ══════════════════════════════════════════════
    PEŁNOEKRANOWY STOPER — serce aplikacji
