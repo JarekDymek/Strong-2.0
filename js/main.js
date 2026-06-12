@@ -745,6 +745,28 @@ function setupEventListeners() {
             );
         }
     });
+
+    // POPRAWKA: Tryb Skupienia (wersja na smartfona) — przycisk "Przyznaj Punkty"
+    // na ostatnim zawodniku zamyka Tryb Skupienia i tu zleca przyznanie punktów,
+    // wracając na ekran główny aplikacji.
+    document.addEventListener('strongman:request-calculate-points', async () => {
+        if (await Handlers.handleCalculatePoints()) {
+            signalPoints(); VIB.save();
+            confettiBurst(16);
+            refreshFullUI();
+            LiveDisplay.publishState();
+            ActiveActionGuide.update();
+            Judge.refreshAllSessions(
+                State.getActiveCompetitors(),
+                State.getEventTitle(),
+                State.getEventType()
+            );
+            setTimeout(() => {
+                const nextBtn = document.querySelector('.workflow-actions') || document.getElementById('nextEventBtn');
+                if (nextBtn) nextBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        }
+    });
     safeAddListener('showFinalSummaryBtn','click', () => {
         const main    = document.getElementById('mainContent');
         const summary = document.getElementById('summaryView');
