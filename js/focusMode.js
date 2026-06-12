@@ -9,7 +9,7 @@ import { getState } from './state.js';
 
 export function setupFocusModeEventListeners() {
     document.getElementById('closeFocusBtn').addEventListener('click', handleCloseFocusMode);
-    document.getElementById('focusBackBtn').addEventListener('click', handleCloseFocusMode);
+    document.getElementById('backToMainBtn').addEventListener('click', handleCloseFocusMode);
     document.getElementById('focusPrevBtn').addEventListener('click', () => handleFocusNavigate(-1));
     document.getElementById('focusNextBtn').addEventListener('click', () => handleFocusNavigate(1));
     document.getElementById('focusConfirmNextBtn').addEventListener('click', handleFocusConfirmAndNext);
