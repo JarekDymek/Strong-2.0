@@ -709,6 +709,15 @@ body.dark .result-dist .resultInput { background:rgba(251,191,36,0.12) !importan
 .focus-nav-buttons button { padding:15px; font-size:1rem; }
 #focusConfirmNextBtn { background:linear-gradient(135deg,#15803D,#16A34A); }
 #focusPrevBtn, #focusNextBtn { background:linear-gradient(135deg,#1D4ED8,#2563EB); }
+#focusAwardPointsBtn {
+  margin-top:14px; width:100%; padding:17px 12px; font-size:1.05rem; font-weight:800;
+  background:linear-gradient(135deg,#15803D,#22C55E); box-shadow:0 4px 18px rgba(34,197,94,0.35);
+  animation: focusAwardPulse 1.6s ease-in-out infinite;
+}
+@keyframes focusAwardPulse {
+  0%, 100% { box-shadow:0 4px 18px rgba(34,197,94,0.35); }
+  50% { box-shadow:0 4px 26px rgba(34,197,94,0.65); }
+}
 .focus-close-btn { position:absolute; top:14px; right:18px; background:none; border:none; font-size:2.4rem; color:rgba(255,255,255,0.55); cursor:pointer; padding:0; width:auto; margin:0; box-shadow:none; transition:color var(--t-fast); }
 .focus-close-btn:hover { color:var(--fire-btn); }
 
@@ -950,6 +959,7 @@ body.dark .result-dist .resultInput { background:rgba(251,191,36,0.12) !importan
   .guide-step-circle.gs-active,
   #calculatePointsBtn,
   #finalEventBtn,
+  #focusAwardPointsBtn,
   #selectEventsForCompetitionBtn {
     animation: none !important;
   }
