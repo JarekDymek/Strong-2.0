@@ -111,18 +111,7 @@ export function showConfirmation(message) {
         DOMElements.cancelBtn = newCancelBtn;
         newCancelBtn.disabled = false;
 
-        // MOBILE FIX: Ghost tap guard — na iOS/Android po zamknięciu file pickera
-        // lub innej interakcji dotykowej przeglądarka może „wypuścić" odłożone zdarzenie
-        // click które trafia natychmiast w przycisk modalny (efekt ghost tap).
-        // Ignorujemy kliknięcia przez pierwsze 350ms od otwarcia modala.
-        const GHOST_TAP_GUARD_MS = 350;
-        const openedAt = Date.now();
-
-        const close = (value) => {
-            if (Date.now() - openedAt < GHOST_TAP_GUARD_MS) return; // zbyt szybkie — ignoruj
-            modal.classList.remove('visible');
-            resolve(value);
-        };
+        const close = (value) => { modal.classList.remove('visible'); resolve(value); };
         newConfirmBtn.onclick = () => close(true);
         newCancelBtn.onclick = () => close(false);
     });

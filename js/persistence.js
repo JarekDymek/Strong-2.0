@@ -86,21 +86,6 @@ let autosaveSuspended = false;
 export function suspendAutosave() { autosaveSuspended = true; }
 export function resumeAutosave() { autosaveSuspended = false; }
 
-/**
- * Natychmiastowy zapis do IDB (bez debounce) — używany w krytycznych momentach
- * przed exportStateToFile, żeby stan był zawsze w IDB nawet jeśli iOS nawiguje
- * zamiast pobrać plik.
- */
-async function idbSaveImmediate() {
-    try {
-        if (autoSaveTimer) { clearTimeout(autoSaveTimer); autoSaveTimer = null; }
-        const stateObj = getState();
-        await idbPut(AUTO_SAVE_DB_KEY, stateObj);
-    } catch (e) {
-        console.warn('idbSaveImmediate failed', e);
-    }
-}
-
 export function triggerAutoSave() {
     if (!isAutosaveEnabled()) return;
     if (autosaveSuspended) return;   // BUG-05 fix: suspended flag was never checked
@@ -158,10 +143,6 @@ export async function loadStateFromAutoSave() {
     try {
         const loaded = await idbGet(AUTO_SAVE_DB_KEY);
         if (!loaded) return false;
-        // MOBILE FIX: Na iOS aplikacja może być przeładowana zaraz po zdarzeniu dotykowym
-        // (np. po nieudanej próbie pobrania pliku przez a.click()). Dodajemy małe
-        // opóźnienie przed pokazaniem dialogu, żeby ghost tap nie zamknął go natychmiast.
-        await new Promise(r => setTimeout(r, 400));
         if (await showConfirmation("Wykryto niezakończoną sesję. Czy chcesz ją przywrócić?")) {
             restoreState(loaded);
             showNotification("Sesja została przywrócona!", "success");
@@ -192,11 +173,6 @@ export async function deleteCheckpoint(key) {
 
 // --- Import / Export functions (keep original behavior but use IDB where appropriate) ---
 export async function exportStateToFile(contextLabel) {
-    // MOBILE FIX: zawsze zapisz stan do IDB PRZED próbą pobrania pliku.
-    // Na iOS a.click() może spowodować nawigację zamiast pobrania,
-    // co przeładuje stronę. IDB gwarantuje że stan będzie do przywrócenia.
-    await idbSaveImmediate();
-
     const data = getState();
     // Buduj opisową nazwę pliku
     const eventName  = (data.eventName || 'Zawody').replace(/[\s\/\\:*?"<>|]/g, '_').slice(0, 30);
@@ -206,46 +182,15 @@ export async function exportStateToFile(contextLabel) {
     let label        = contextLabel || `Konk_${eventNum}_${eventTitle}` || 'stan';
     label = label.replace(/[\s\/\\:*?"<>|–—]/g, '_').slice(0, 50);
     const filename   = `${eventName}_${label}_${dateStr}.json`;
-    const jsonStr    = JSON.stringify(data, null, 2);
-    const blob = new Blob([jsonStr], {type: 'application/json'});
-
-    // MOBILE FIX: na iOS Safari a.download nie pobiera pliku — zamiast tego
-    // nawiguje do niego (opuszcza aplikację). Wykrywamy iOS i używamy
-    // Web Share API (jeśli dostępne) lub pokazujemy modal z linkiem do skopiowania.
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
-    if (isIOS && navigator.share && navigator.canShare) {
-        // iOS 15+ z Web Share API — może współdzielić pliki
-        try {
-            const file = new File([jsonStr], filename, { type: 'application/json' });
-            if (navigator.canShare({ files: [file] })) {
-                await navigator.share({ files: [file], title: filename });
-                return;
-            }
-        } catch (shareErr) {
-            // Użytkownik anulował share lub nie obsługiwane — fallback poniżej
-            if (shareErr.name !== 'AbortError') {
-                console.warn('Web Share API failed:', shareErr);
-            } else {
-                return; // user anulował — nie robimy nic
-            }
-        }
-    }
-
-    // Standardowe pobieranie (PC, Android, iPad z Chrome)
-    // Używamy target=_blank żeby nie nawigować od bieżącej strony
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = filename;
-    a.target = '_blank';          // MOBILE FIX: zapobiega opuszczeniu strony
-    a.rel = 'noopener';
     document.body.appendChild(a);
     a.click();
     a.remove();
-    // Krótkie opóźnienie przed revoke — iOS potrzebuje czasu na pobranie
-    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    URL.revokeObjectURL(url);
 }
 
 export async function importStateFromFile(file) {

@@ -711,8 +711,206 @@ body.dark .result-dist .resultInput { background:rgba(251,191,36,0.12) !importan
 #focusPrevBtn, #focusNextBtn { background:linear-gradient(135deg,#1D4ED8,#2563EB); }
 .focus-close-btn { position:absolute; top:14px; right:18px; background:none; border:none; font-size:2.4rem; color:rgba(255,255,255,0.55); cursor:pointer; padding:0; width:auto; margin:0; box-shadow:none; transition:color var(--t-fast); }
 .focus-close-btn:hover { color:var(--fire-btn); }
-.focus-back-btn { display:block; margin:0 auto 18px auto; padding:12px 28px; font-size:1rem; font-family:var(--font-display); letter-spacing:1px; font-weight:700; background:linear-gradient(135deg,#374151,#4B5563); color:#fff; border:none; border-radius:var(--r-md); cursor:pointer; width:100%; max-width:320px; text-align:center; transition:background var(--t-fast), transform var(--t-fast); box-shadow:0 2px 8px rgba(0,0,0,0.3); }
-.focus-back-btn:hover { background:linear-gradient(135deg,#4B5563,#6B7280); transform:translateY(-1px); }
+
+/* Score entry cards: main judge input flow mirrors assistant judge UI */
+.score-entry-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 1fr minmax(140px, 220px);
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  padding: 4px 44px 14px 0;
+  background: linear-gradient(180deg, rgba(5,12,24,0.98), rgba(5,12,24,0.88));
+}
+.score-entry-header h3 {
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 5vw, 2rem);
+  letter-spacing: 1px;
+  margin: 0;
+}
+.score-entry-header p {
+  color: rgba(255,255,255,0.72);
+  font-size: 0.88rem;
+  font-weight: 800;
+  margin: 2px 0 0;
+}
+#focusSendAllBtn {
+  margin: 0;
+  min-height: 54px;
+  border-radius: 12px;
+  background: linear-gradient(135deg,#15803D,#16A34A);
+}
+.score-entry-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  padding: 2px 2px 22px;
+}
+.score-entry-card {
+  background: #fff;
+  color: #1E3A5F;
+  border: 2px solid rgba(30,58,95,0.16);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+  transition: border-color var(--t-fast), box-shadow var(--t-fast), transform var(--t-fast);
+}
+.score-entry-card.is-active {
+  border-color: #FFB800;
+  box-shadow: 0 0 0 2px rgba(255,184,0,0.35), 0 8px 24px rgba(0,0,0,0.25);
+}
+.score-entry-card.is-saved {
+  border-color: #16A34A;
+  box-shadow: 0 6px 18px rgba(22,163,74,0.22);
+}
+.score-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(30,58,95,0.12);
+  background: rgba(30,58,95,0.04);
+}
+.score-entry-card.is-active .score-card-header { background: rgba(255,184,0,0.12); }
+.score-entry-card.is-saved .score-card-header { background: rgba(22,163,74,0.10); }
+.score-order-badge {
+  min-width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  background: #E5E7EB;
+  color: #374151;
+  font-size: 0.78rem;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+.score-entry-card.is-active .score-order-badge {
+  background: #FFB800;
+  color: #1E293B;
+}
+.score-card-name {
+  flex: 1;
+  min-width: 0;
+  color: #1E3A5F;
+  font-size: clamp(1.02rem, 4vw, 1.25rem);
+  line-height: 1.2;
+  font-weight: 900;
+  word-break: break-word;
+}
+.score-card-status {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #EEF2F7;
+  color: #64748B;
+  font-size: 0.74rem;
+  font-weight: 900;
+}
+.score-entry-card.is-saved .score-card-status {
+  background: #16A34A;
+  color: #fff;
+}
+.score-card-body { padding: 14px; }
+.score-input-wrap {
+  display: grid;
+  grid-template-columns: 1fr 78px;
+  gap: 10px;
+  align-items: stretch;
+}
+.score-result-input {
+  width: 100%;
+  min-height: 72px;
+  padding: 12px 8px;
+  font-size: clamp(1.7rem, 8vw, 2.5rem);
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-align: center;
+  border: 2.5px solid rgba(30,58,95,0.18);
+  border-radius: 12px;
+  background: #F8FAFC;
+  color: #1E3A5F;
+  letter-spacing: 2px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.score-result-input:focus {
+  outline: none;
+  border-color: #FF4500;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(255,69,0,0.16);
+}
+.score-result-input.filled {
+  border-color: #16A34A;
+  background: #F0FAF4;
+  color: #14532D;
+}
+.score-result-input[readonly] {
+  color: #64748B;
+  cursor: pointer;
+}
+.score-save-btn {
+  width: 100%;
+  min-height: 72px;
+  margin: 0;
+  padding: 0;
+  border-radius: 12px;
+  font-size: clamp(1.8rem, 6vw, 2.35rem);
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(160deg, #2ECC71, #1E8449);
+  box-shadow: 0 4px 12px rgba(39,174,96,0.35);
+}
+.score-entry-card.is-saved .score-save-btn {
+  background: linear-gradient(160deg, #64748B, #475569);
+  box-shadow: none;
+}
+.score-card-tools {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+.score-stopwatch-btn {
+  min-height: 46px;
+  margin: 0;
+  font-size: 0.9rem;
+  border-radius: 10px;
+  background: linear-gradient(135deg,#1D4ED8,#2563EB);
+}
+.score-saved-info {
+  display: none;
+  margin-top: 10px;
+  text-align: center;
+  color: #15803D;
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+.score-entry-card.is-saved .score-saved-info { display: block; }
+
+@media (max-width: 600px) {
+  .focus-mode-box {
+    padding: 14px 10px 0;
+  }
+  .score-entry-header {
+    grid-template-columns: 1fr;
+    padding: 4px 42px 12px 0;
+  }
+  #focusSendAllBtn {
+    min-height: 58px;
+  }
+  .score-input-wrap {
+    grid-template-columns: 1fr 74px;
+  }
+}
 
 /* ══════════════════════════════════════════════
    PEŁNOEKRANOWY STOPER — serce aplikacji

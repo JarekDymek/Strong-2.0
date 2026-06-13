@@ -52,25 +52,10 @@ export function restoreState(loadedState) {
     if (!Array.isArray(state.plannedEvents)) state.plannedEvents = [];
     if (!state.eventTitle) state.eventTitle = `Konkurencja ${state.eventNumber || 1}`;
     if (!state.currentEventType) state.currentEventType = 'high';
-
-    // MOBILE FIX: jeśli competitionStage brakuje LUB ma wartość 'setup' przy obecnych
-    // zawodnikach bez historii — oznacza to stan tuż przed losowaniem (draw).
-    // Wcześniejszy warunek `if (!state.competitionStage)` nie łapał przypadku gdy
-    // plik JSON zawierał stage='setup' zamiast 'draw' (np. starszy format lub
-    // gdy autosave zapisał stan z setup zamiast draw przez race condition z debouncem).
-    const hasCompetitors = Array.isArray(state.competitors) && state.competitors.length > 0;
-    const noHistory      = !Array.isArray(state.eventHistory) || state.eventHistory.length === 0;
-
-    if (!state.competitionStage || state.competitionStage === 'setup') {
-        if (hasCompetitors && noHistory) {
-            // Zawodnicy są, historia pusta → to etap losowania
-            state.competitionStage = 'draw';
-        } else if (hasCompetitors) {
-            // Zawodnicy są, jest historia → zawody trwają
-            state.competitionStage = 'running';
-        } else {
-            state.competitionStage = 'setup';
-        }
+    if (!state.competitionStage) {
+        state.competitionStage = state.competitors?.length && state.eventHistory?.length === 0
+            ? 'draw'
+            : (state.competitors?.length ? 'running' : 'setup');
     }
 }
 

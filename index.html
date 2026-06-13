@@ -313,17 +313,14 @@
 <div id="focusModeModal" class="modal-overlay" role="dialog" aria-modal="true">
   <div class="modal-box focus-mode-box">
     <button id="closeFocusBtn" class="focus-close-btn" aria-label="Zamknij tryb skupienia">×</button>
-    <button id="backToMainBtn" class="focus-back-btn" aria-label="Wróć do głównego okna">← Wróć</button>
-    <div id="focusCompetitorInfo">
-      <img id="focusCompetitorPhoto" src="" alt="Zdjęcie zawodnika">
-      <h3 id="focusCompetitorName"></h3>
+    <div class="score-entry-header">
+      <div>
+        <h3 id="focusCompetitorName">Wpisywanie wyników</h3>
+        <p id="focusProgressText">0 / 0 zapisanych</p>
+      </div>
+      <button id="focusSendAllBtn" type="button">✓ Zapisz wpisane</button>
     </div>
-    <input type="text" inputmode="decimal" id="focusResultInput" placeholder="Wpisz wynik…">
-    <div class="focus-nav-buttons">
-      <button id="focusPrevBtn">◀ Poprzedni</button>
-      <button id="focusConfirmNextBtn">✅ Zatwierdź i Następny</button>
-      <button id="focusNextBtn">Następny ▶</button>
-    </div>
+    <div id="focusCardsList" class="score-entry-list"></div>
   </div>
 </div>
 
